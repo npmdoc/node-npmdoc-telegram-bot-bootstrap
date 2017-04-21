@@ -1,0 +1,175 @@
+<html><head></head><body><div class="apidocDiv">
+<style>
+/*csslint
+*/
+.apidocDiv {
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.apidocDiv a[href] {
+    color: #33f;
+    font-weight: bold;
+    text-decoration: none;
+}
+.apidocDiv a[href]:hover {
+    text-decoration: underline;
+}
+.apidocCodeCommentSpan {
+    background: #bbf;
+    color: #000;
+    display: block;
+}
+.apidocCodeKeywordSpan {
+    color: #d00;
+    font-weight: bold;
+}
+.apidocCodePre {
+    background: #eef;
+    border: 1px solid;
+    color: #777;
+    padding: 5px;
+    white-space: pre-wrap;
+}
+.apidocFooterDiv {
+    margin-top: 20px;
+    text-align: center;
+}
+.apidocModuleLi {
+    margin-top: 10px;
+}
+.apidocSectionDiv {
+    border-top: 1px solid;
+    margin-top: 20px;
+}
+.apidocSignatureSpan {
+    color: #777;
+    font-weight: bold;
+}
+</style>
+<h1>api documentation for
+    <a href="https://github.com/kengz/telegram-bot-bootstrap">telegram-bot-bootstrap (v0.0.15)</a>
+</h1>
+<h4>A bootstrap for Telegram bot with directly deployable sample bot and JS-wrapped API methods.</h4>
+<div class="apidocSectionDiv"><a href="#apidoc.tableOfContents" id="apidoc.tableOfContents"><h1>table of contents</h1></a><ol>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.telegram-bot-bootstrap">module telegram-bot-bootstrap</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.telegram-bot-bootstrap.telegram-bot-bootstrap">
+            function <span class="apidocSignatureSpan"></span>telegram-bot-bootstrap
+            <span class="apidocSignatureSpan">(token)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+</ol></div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.telegram-bot-bootstrap" id="apidoc.module.telegram-bot-bootstrap">module telegram-bot-bootstrap</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.telegram-bot-bootstrap.telegram-bot-bootstrap" id="apidoc.element.telegram-bot-bootstrap.telegram-bot-bootstrap">
+        function <span class="apidocSignatureSpan"></span>telegram-bot-bootstrap
+        <span class="apidocSignatureSpan">(token)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">telegram-bot-bootstrap = function (token) {
+    this.token = token;
+    this.baseUrl = 'https://api.telegram.org/bot' + this.token;
+
+    // A sample Telegram bot JSON data, for req options
+    this.formData = {
+        chat_id: "87654321",
+        text: "Hello there"
+    };
+
+    // template options for req the Telegram Bot API
+    this.baseoptions = {
+        method: 'POST',
+        baseUrl: this.baseUrl,
+        url: "sendMessage",
+        formData: this.formData
+    };
+
+    ///////////////////////////////
+    // Internal, private methods //
+    ///////////////////////////////
+
+    // Convert an data to format proper for HTTP methods
+    this.toHTTPProper = function(data) {
+        // currently serialize Array now, leave stream/string
+        return _.isArray(data) ? JSON.stringify(data) : data;
+        // return data;
+    }
+
+    // serialize a whole object proper for HTTP methods
+    // discard key-value pair if value is undefined
+    // only returns non-empty JSON
+    this.serialize = function(obj) {
+        // var ser = _.omit(
+        //     _.mapValues(_.flattenJSON(obj), this.toHTTPProper)
+        //     , _.isUndefined);
+        var ser = _.omit(
+            _.mapValues(obj, this.toHTTPProper)
+            , _.isUndefined);
+        if (!_.isEmpty(ser)) return ser;
+    }
+
+    // properly set req as its method
+    this.req = req;
+
+    // Extends the options for req for the Telegram Bot.
+    // @param  {string} botMethod Telegram bot API method.
+    // @param  {JSON} JSONdata A JSON object with the required fields (see API).
+    // @param  {string} [HTTPMethod=POST] Optionally change method if need to.
+    // @returns {JSON} option The extended option.
+    //
+    // @example
+    // extOpt('sendMessage', {chat_id: 123456, text: 'hello world'})
+    // â†’ {
+    // method: 'POST',
+    // baseUrl: 'https://api.telegram.org/bot...',
+    // url: 'sendMessage',
+    // formData: {chat_id: 123456, text: 'hello world'} }
+    this.extOpt = function(botMethod, JSONdata, HTTPMethod) {
+        var opt = _.clone({
+            method: 'POST',
+            baseUrl: this.baseUrl,
+            url: "sendMessage",
+            formData: this.formData
+        });
+        _.assign(opt, {
+            url: botMethod
+        })
+        if (JSONdata) _.assign(opt, {
+            formData: this.serialize(JSONdata)
+        })
+        if (HTTPMethod) _.assign(opt, {
+            botMethod: HTTPMethod
+        });
+
+        return opt;
+    }
+
+    // shorthand composition: bot's HTTP request
+    this.reqBot = _.flow(this.extOpt, this.req)
+
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocFooterDiv">
+    [ this document was created with
+    <a href="https://github.com/kaizhu256/node-utility2" target="_blank">utility2</a>
+    ]
+</div>
+</div>
+</body></html>
